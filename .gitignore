@@ -1,0 +1,22 @@
+# Node Dependencies
+node_modules/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build Outputs
+dist/
+build/
+
+# Uploads and temporary files
+uploads/
+*.log
+
+# IDE files
+.idea/
+.vscode/
+.DS_Store
