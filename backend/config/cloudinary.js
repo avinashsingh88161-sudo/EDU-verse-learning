@@ -30,13 +30,13 @@ let notesStorage;
 if (isCloudinaryConfigured) {
   notesStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: {
-      folder: "eduverse/notes",
-      resource_type: "auto",
-      public_id: (req, file) => {
-        const cleanName = path.parse(file.originalname).name.replace(/[^a-zA-Z0-9_-]/g, "_");
-        return `note_${Date.now()}_${cleanName}`;
-      },
+    params: async (req, file) => {
+      const cleanName = path.parse(file.originalname).name.replace(/[^a-zA-Z0-9_-]/g, "_");
+      return {
+        folder: "eduverse/notes",
+        resource_type: "raw",
+        public_id: `note_${Date.now()}_${cleanName}.pdf`,
+      };
     },
   });
 } else {
@@ -60,10 +60,11 @@ if (isCloudinaryConfigured) {
     cloudinary: cloudinary,
     params: async (req, file) => {
       const cleanName = path.parse(file.originalname).name.replace(/[^a-zA-Z0-9_-]/g, "_");
+      const isPdf = file.mimetype === "application/pdf" || file.originalname.toLowerCase().endsWith(".pdf");
       return {
         folder: "eduverse/assignments/submissions",
-        resource_type: "auto",
-        public_id: `sub_${Date.now()}_${cleanName}`,
+        resource_type: isPdf ? "raw" : "image",
+        public_id: isPdf ? `sub_${Date.now()}_${cleanName}.pdf` : `sub_${Date.now()}_${cleanName}`,
       };
     },
   });

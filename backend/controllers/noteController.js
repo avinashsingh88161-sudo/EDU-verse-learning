@@ -53,11 +53,14 @@ const uploadNote = async (req, res) => {
 
     const rawFileUrl = uploadedFile.path || uploadedFile.secure_url || uploadedFile.url || "";
     const isCloud = rawFileUrl.startsWith("http");
-    const fileUrl = isCloud ? rawFileUrl : "";
+    let fileUrl = isCloud ? rawFileUrl : "";
+    if (fileUrl.includes("cloudinary.com") && fileUrl.includes("/image/upload/") && fileUrl.toLowerCase().endsWith(".pdf")) {
+      fileUrl = fileUrl.replace("/image/upload/", "/raw/upload/");
+    }
     const publicId = uploadedFile.filename || uploadedFile.public_id || "";
     const originalFileName = uploadedFile.originalname || "";
     const fileType = uploadedFile.mimetype || "application/pdf";
-    const pdfFile = isCloud ? rawFileUrl : (uploadedFile.filename || "");
+    const pdfFile = fileUrl || (uploadedFile.filename || "");
 
     const note = await Note.create({
       title,
@@ -188,11 +191,12 @@ const getNoteFile = async (req, res) => {
       });
     }
 
-    if (note.fileUrl && note.fileUrl.startsWith("http")) {
-      return res.redirect(note.fileUrl);
-    }
-    if (note.pdfFile && note.pdfFile.startsWith("http")) {
-      return res.redirect(note.pdfFile);
+    let targetUrl = note.fileUrl || note.pdfFile || "";
+    if (targetUrl && targetUrl.startsWith("http")) {
+      if (targetUrl.includes("cloudinary.com") && targetUrl.includes("/image/upload/") && targetUrl.toLowerCase().endsWith(".pdf")) {
+        targetUrl = targetUrl.replace("/image/upload/", "/raw/upload/");
+      }
+      return res.redirect(targetUrl);
     }
 
     const filePath = path.join(__dirname, "../uploads/notes", note.pdfFile);

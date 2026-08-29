@@ -56,4 +56,13 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Pre-save hook to prepend "Prof. " to teacher/faculty names
+userSchema.pre("save", function (next) {
+  const roleLower = (this.role || "").toLowerCase();
+  if ((roleLower === "teacher" || roleLower === "faculty") && this.name && !this.name.startsWith("Prof. ")) {
+    this.name = `Prof. ${this.name}`;
+  }
+  next();
+});
+
 module.exports = mongoose.model("User", userSchema);

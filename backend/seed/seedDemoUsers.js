@@ -6,6 +6,15 @@ const User = require("../models/User");
 
 const seedDemoUsers = async () => {
   try {
+    // Check if demo users already exist to avoid expensive bcrypt hashing on every server boot
+    const existingAdmin = await User.findOne({ role: "admin" }).select("_id");
+    const existingTeacher = await User.findOne({ email: "avinashsingh88161@gmail.com" }).select("_id");
+    
+    if (existingAdmin && existingTeacher) {
+      console.log("⚡ Demo accounts already initialized.");
+      return;
+    }
+
     const hashedPasswordTeacher = await bcrypt.hash("Avinash@123", 10);
     const hashedPasswordAdmin = await bcrypt.hash(
       process.env.ADMIN_PASSWORD || "Admin@123",
