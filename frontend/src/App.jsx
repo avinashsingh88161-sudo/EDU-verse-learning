@@ -1,10 +1,13 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { warmupBackend } from "./api/axiosInstance";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import Login from "./pages/Login";
 import AdminLogin from "./pages/AdminLogin";
 import Signup from "./pages/Signup";
+import LandingPage from "./pages/LandingPage";
 
 // Student Pages
 import StudentDashboard from "./pages/StudentDashboard";
@@ -44,12 +47,16 @@ const FallbackRedirect = () => {
 };
 
 function App() {
+  useEffect(() => {
+    warmupBackend();
+  }, []);
+
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Default root path goes to /login */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          {/* Default root path */}
+          <Route path="/" element={<LandingPage />} />
 
           {/* Public Authentication Routes */}
           <Route path="/login" element={<Login />} />

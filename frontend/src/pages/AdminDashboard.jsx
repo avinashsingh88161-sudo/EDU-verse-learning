@@ -79,6 +79,7 @@ const AdminDashboard = () => {
               subtitle="Registered instructors"
               icon={Users}
               colorTheme="indigo"
+              onClick={() => navigate("/admin/teachers")}
             />
             <StatCard
               title="Total Students"
@@ -86,6 +87,7 @@ const AdminDashboard = () => {
               subtitle="Enrolled learners"
               icon={GraduationCap}
               colorTheme="cyan"
+              onClick={() => navigate("/admin/students")}
             />
             <StatCard
               title="Active Courses"
@@ -93,6 +95,7 @@ const AdminDashboard = () => {
               subtitle="Published modules"
               icon={BookOpen}
               colorTheme="purple"
+              onClick={() => navigate("/admin/courses")}
             />
             <StatCard
               title="Created Quizzes"
@@ -100,6 +103,7 @@ const AdminDashboard = () => {
               subtitle="Online evaluations"
               icon={HelpCircle}
               colorTheme="amber"
+              onClick={() => navigate("/admin/quizzes")}
             />
             <StatCard
               title="Assignments"
@@ -107,6 +111,7 @@ const AdminDashboard = () => {
               subtitle="Deliverable tasks"
               icon={CheckSquare}
               colorTheme="rose"
+              onClick={() => navigate("/admin/assignments")}
             />
             <StatCard
               title="Quiz Attempts"
@@ -114,6 +119,7 @@ const AdminDashboard = () => {
               subtitle="Student evaluations"
               icon={Award}
               colorTheme="emerald"
+              onClick={() => navigate("/admin/results")}
             />
           </div>
 

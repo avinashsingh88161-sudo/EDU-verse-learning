@@ -72,18 +72,24 @@ const StudentProgress = () => {
                   value={courses.length}
                   subtitle="Active enrollments"
                   icon={BookOpen}
+                  colorTheme="indigo"
+                  onClick={() => navigate("/student/my-courses")}
                 />
                 <StatCard
                   title="Assignments Submitted"
                   value={submissions.length}
                   subtitle={`${gradedAssignments.length} graded`}
                   icon={CheckSquare}
+                  colorTheme="amber"
+                  onClick={() => navigate("/student/assignments")}
                 />
                 <StatCard
                   title="Quizzes Attempted"
                   value={quizResults.length}
                   subtitle={`Avg Score: ${avgQuizPercentage}%`}
                   icon={Award}
+                  colorTheme="emerald"
+                  onClick={() => navigate("/student/quizzes")}
                 />
               </div>
 

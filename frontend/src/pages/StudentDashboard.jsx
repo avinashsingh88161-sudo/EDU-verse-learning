@@ -119,6 +119,7 @@ const StudentDashboard = () => {
               colorTheme="indigo"
               trend="Active"
               trendType="up"
+              onClick={() => navigate("/student/my-courses")}
             />
             <StatCard
               title="Available Quizzes"
@@ -128,6 +129,7 @@ const StudentDashboard = () => {
               colorTheme="cyan"
               trend="Ready"
               trendType="up"
+              onClick={() => navigate("/student/quizzes")}
             />
             <StatCard
               title="Quizzes Attempted"
@@ -137,6 +139,7 @@ const StudentDashboard = () => {
               colorTheme="emerald"
               trend="Evaluated"
               trendType="up"
+              onClick={() => navigate("/student/progress")}
             />
             <StatCard
               title="Assignments Submitted"
@@ -146,6 +149,7 @@ const StudentDashboard = () => {
               colorTheme="amber"
               trend="Up to date"
               trendType="up"
+              onClick={() => navigate("/student/assignments")}
             />
           </div>
 

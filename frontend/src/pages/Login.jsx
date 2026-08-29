@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../api/axiosInstance";
+import api, { warmupBackend } from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
-import { GraduationCap, ArrowRight, UserCheck, BookOpen, ShieldCheck } from "lucide-react";
-import "./Login.css";
+import { Brain, ArrowRight, Loader2, Sparkles, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import "./LandingPage.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,9 +13,14 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSlowAuth, setIsSlowAuth] = useState(false);
+
+  useEffect(() => {
+    warmupBackend();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -24,15 +29,32 @@ const Login = () => {
     });
   };
 
-  const fillQuickAccount = (email, password) => {
-    setFormData({ email, password });
+  const fillDemo = (role) => {
     setError("");
+    if (role === "teacher") {
+      setFormData({
+        email: "avinashsingh88161@gmail.com",
+        password: "Avinash@123",
+      });
+    } else if (role === "student") {
+      setFormData({
+        email: "ashutosh123@gmail.com",
+        password: "Avinash@123",
+      });
+    } else if (role === "admin") {
+      navigate("/admin/login");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+    setIsSlowAuth(false);
+
+    const timer = setTimeout(() => {
+      setIsSlowAuth(true);
+    }, 2500);
 
     try {
       const res = await api.post("/auth/login", formData);
@@ -53,109 +75,118 @@ const Login = () => {
       const msg = err.response?.data?.message || "Invalid email or password.";
       setError(msg);
     } finally {
+      clearTimeout(timer);
+      setIsSlowAuth(false);
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-page">
-      {/* Left Branding Section */}
-      <div className="login-brand">
-        <div className="brand-top">
-          <div className="brand-logo">
-            <GraduationCap size={24} />
+    <div className="mint-auth-page-root">
+      <div className="mint-bg-orb orb-emerald-1"></div>
+      <div className="mint-bg-orb orb-emerald-2"></div>
+
+      <div className="mint-auth-card-wrapper animate-fade-in">
+        <div className="mint-auth-card">
+          <div className="mint-card-logo-badge">
+            <Brain size={28} className="mint-brand-icon" />
           </div>
-          <span className="brand-name">EduVerse</span>
-        </div>
 
-        <div className="brand-content">
-          <span className="brand-eyebrow">Academic Learning Portal</span>
-          <h1>
-            Empowering Campus
-            <br />
-            <span>Education.</span>
-          </h1>
-          <p className="brand-description">
-            Access your registered courses, lecture notes, assignments, and online quizzes through a centralized platform.
-          </p>
-        </div>
+          <div className="mint-card-header">
+            <h1>Welcome back</h1>
+            <p>Sign in to continue your journey</p>
+          </div>
 
-        <div className="brand-footer">EduVerse Academic LMS</div>
-      </div>
+          {error && <div className="mint-error-banner">{error}</div>}
 
-      {/* Right Login Form */}
-      <div className="login-panel">
-        <div className="login-card glass-card">
-          <form className="login-form" onSubmit={handleSubmit}>
-            <span className="login-eyebrow">Account Access</span>
-            <h2>Sign in to EduVerse</h2>
-            <p className="login-subtitle">Enter your institutional email and password to continue.</p>
+          <form className="mint-auth-form" onSubmit={handleSubmit} autoComplete="off">
+            <div className="mint-form-field">
+              <label htmlFor="email">EMAIL</label>
+              <div className="mint-input-wrapper">
+                <Mail size={18} className="mint-input-icon" />
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  onFocus={warmupBackend}
+                  autoComplete="off"
+                  required
+                />
+              </div>
+            </div>
 
-            {/* Quick Fill Demo Selector */}
-            <div className="quick-demo-accounts mt-10 mb-16">
-              <span className="quick-demo-label">Quick Account Select:</span>
-              <div className="quick-demo-pills">
+            <div className="mint-form-field">
+              <label htmlFor="password">PASSWORD</label>
+              <div className="mint-input-wrapper">
+                <Lock size={18} className="mint-input-icon" />
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  onFocus={warmupBackend}
+                  autoComplete="new-password"
+                  required
+                />
                 <button
                   type="button"
-                  className="demo-pill student"
-                  onClick={() => fillQuickAccount("ashutosh123@gmail.com", "Avinash@123")}
+                  className="mint-pw-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
                 >
-                  <BookOpen size={12} /> Student Account
-                </button>
-                <button
-                  type="button"
-                  className="demo-pill teacher"
-                  onClick={() => fillQuickAccount("avinashsingh88161@gmail.com", "Avinash@123")}
-                >
-                  <UserCheck size={12} /> Faculty / Teacher
-                </button>
-                <button
-                  type="button"
-                  className="demo-pill admin"
-                  onClick={() => fillQuickAccount("admin@eduverse.com", "Admin@123")}
-                >
-                  <ShieldCheck size={12} /> Admin HOD
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            {error && <div className="login-error-banner">{error}</div>}
-
-            <div className="login-field">
-              <label htmlFor="email">Email Address</label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                placeholder="student@college.edu"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="login-field">
-              <label htmlFor="password">Password</label>
-              <input
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <button type="submit" className="login-submit-btn" disabled={loading}>
-              {loading ? "Authenticating..." : "Sign In"} <ArrowRight size={16} />
+            <button type="submit" className="mint-primary-btn" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 size={18} className="spin-icon" /> Authenticating...
+                </>
+              ) : (
+                <>
+                  Sign in <ArrowRight size={17} />
+                </>
+              )}
             </button>
 
-            <p className="login-switch">
-              Don't have an account? <Link to="/signup">Register now</Link>
-            </p>
+            {isSlowAuth && (
+              <div className="mint-coldstart-notice">
+                <Sparkles size={15} className="spin-icon" />
+                <span>Waking up cloud database... Logging you in now.</span>
+              </div>
+            )}
+
+            <div className="mint-switch-text">
+              Don't have an account?{" "}
+              <Link to="/signup" className="mint-link-btn">
+                Sign up
+              </Link>
+            </div>
+
+            <div className="mint-quick-demo-pills">
+              <span className="demo-hint-label">Quick Demo:</span>
+              <button type="button" className="mint-demo-pill" onClick={() => fillDemo("student")}>
+                Student
+              </button>
+              <button type="button" className="mint-demo-pill" onClick={() => fillDemo("teacher")}>
+                Teacher
+              </button>
+              <button type="button" className="mint-demo-pill admin" onClick={() => fillDemo("admin")}>
+                Admin
+              </button>
+            </div>
           </form>
         </div>
+
+        <p className="mint-terms-text">
+          By continuing, you agree to our <a href="#terms">Terms</a> & <a href="#privacy">Privacy Policy</a>
+        </p>
       </div>
     </div>
   );

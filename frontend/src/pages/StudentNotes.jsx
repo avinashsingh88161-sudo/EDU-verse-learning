@@ -81,8 +81,12 @@ const StudentNotes = () => {
   };
 
   const openNoteFile = (note) => {
-    if (note.fileUrl && note.fileUrl.startsWith("http")) {
-      window.open(note.fileUrl, "_blank");
+    let url = note.fileUrl || note.pdfFile || "";
+    if (url && url.startsWith("http")) {
+      if (url.includes("cloudinary.com") && url.includes("/image/upload/") && url.toLowerCase().endsWith(".pdf")) {
+        url = url.replace("/image/upload/", "/raw/upload/");
+      }
+      window.open(url, "_blank");
       return;
     }
     const token = localStorage.getItem("eduverse_token");

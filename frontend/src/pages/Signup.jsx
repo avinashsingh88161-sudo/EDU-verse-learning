@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
-import { GraduationCap, ArrowRight, UserCheck, BookOpen, Clock, CheckCircle2 } from "lucide-react";
-import "./Signup.css";
+import { Brain, ArrowRight, UserCheck, BookOpen, Clock, CheckCircle2, Mail, Lock, User, Eye, EyeOff, Loader2 } from "lucide-react";
+import "./LandingPage.css";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ const Signup = () => {
     facultyId: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [successPending, setSuccessPending] = useState("");
   const [loading, setLoading] = useState(false);
@@ -72,164 +73,181 @@ const Signup = () => {
   };
 
   return (
-    <div className="signup-page">
-      {/* Left Branding */}
-      <div className="signup-brand">
-        <div className="brand-top">
-          <div className="brand-logo">
-            <GraduationCap size={24} />
+    <div className="mint-auth-page-root">
+      <div className="mint-bg-orb orb-emerald-1"></div>
+      <div className="mint-bg-orb orb-emerald-2"></div>
+
+      <div className="mint-auth-card-wrapper animate-fade-in">
+        <div className="mint-auth-card">
+          <div className="mint-card-logo-badge">
+            <Brain size={28} className="mint-brand-icon" />
           </div>
-          <span className="brand-name">EduVerse</span>
-        </div>
 
-        <div className="brand-content">
-          <span className="brand-eyebrow">Academic Learning Portal</span>
-          <h1>
-            Create Account.
-            <br />
-            <span>Start Learning.</span>
-          </h1>
-          <p className="brand-description">
-            Join EduVerse to access course materials, submit assignments, take quizzes, and track academic progress.
-          </p>
-        </div>
+          <div className="mint-card-header">
+            <h1>Create an account</h1>
+            <p>Start your AI-powered learning experience</p>
+          </div>
 
-        <div className="brand-footer">EduVerse Academic LMS</div>
-      </div>
+          {error && <div className="mint-error-banner">{error}</div>}
 
-      {/* Right Signup Panel */}
-      <div className="signup-panel">
-        <div className="signup-card glass-card">
           {successPending ? (
-            <div className="pending-success-card">
-              <div className="pending-icon-wrapper">
-                <Clock size={48} className="text-amber" />
+            <div className="mint-pending-success">
+              <div className="mint-pending-icon">
+                <Clock size={44} />
               </div>
               <h2>Registration Submitted!</h2>
-              <p className="pending-message">{successPending}</p>
-              <div className="pending-info-box">
+              <p className="pending-msg">{successPending}</p>
+              <div className="pending-notice-box">
                 <CheckCircle2 size={16} />
                 <span>The Admin/HOD will review your details. You will be able to log in once approved.</span>
               </div>
-              <Link to="/login" className="signup-submit-btn block text-center mt-20">
-                Return to Login
+              <Link to="/login" className="mint-primary-btn" style={{ textDecoration: "none" }}>
+                Return to Sign In
               </Link>
             </div>
           ) : (
-            <form className="signup-form" onSubmit={handleSubmit}>
-              <span className="signup-eyebrow">Registration</span>
-              <h2>Create your EduVerse Account</h2>
-
-              {error && <div className="signup-error-banner">{error}</div>}
-
-              <div className="role-selector-group">
-                <label className="field-label">Account Role</label>
-                <div className="role-options">
+            <form className="mint-auth-form" onSubmit={handleSubmit}>
+              <div className="mint-form-field">
+                <label>ACCOUNT TYPE</label>
+                <div className="mint-role-pills-row">
                   <button
                     type="button"
-                    className={`role-btn ${formData.role === "student" ? "active" : ""}`}
+                    className={`mint-role-btn ${formData.role === "student" ? "active" : ""}`}
                     onClick={() => selectRole("student")}
                   >
-                    <BookOpen size={16} /> Student
+                    <BookOpen size={15} /> Student
                   </button>
                   <button
                     type="button"
-                    className={`role-btn ${formData.role === "teacher" ? "active" : ""}`}
+                    className={`mint-role-btn ${formData.role === "teacher" ? "active" : ""}`}
                     onClick={() => selectRole("teacher")}
                   >
-                    <UserCheck size={16} /> Teacher
+                    <UserCheck size={15} /> Teacher
                   </button>
                 </div>
               </div>
 
               {formData.role === "teacher" && (
-                <div className="role-info-banner">
-                  🔔 <strong>Teacher Account Approval:</strong> Submitting this form creates a registration request. Your account will be activated after Admin/HOD verification.
+                <div className="mint-teacher-alert">
+                  🔔 Faculty accounts require Admin/HOD verification before activation.
                 </div>
               )}
 
-              <div className="signup-field">
-                <label htmlFor="name">Full Name</label>
-                <input
-                  id="name"
-                  type="text"
-                  name="name"
-                  placeholder="Avinash Singh"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
+              <div className="mint-form-field">
+                <label htmlFor="name">USERNAME</label>
+                <div className="mint-input-wrapper">
+                  <User size={18} className="mint-input-icon" />
+                  <input
+                    id="name"
+                    type="text"
+                    name="name"
+                    placeholder="John"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
               </div>
 
-              <div className="signup-field">
-                <label htmlFor="email">Email Address</label>
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  placeholder="name@university.edu"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
+              <div className="mint-form-field">
+                <label htmlFor="email">EMAIL</label>
+                <div className="mint-input-wrapper">
+                  <Mail size={18} className="mint-input-icon" />
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    placeholder="john@timetoprogam.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
               </div>
 
               {formData.role === "teacher" && (
                 <>
-                  <div className="signup-field">
-                    <label htmlFor="department">Department</label>
-                    <input
-                      id="department"
-                      type="text"
-                      name="department"
-                      placeholder="School of Computing"
-                      value={formData.department}
-                      onChange={handleChange}
-                    />
+                  <div className="mint-form-field">
+                    <label htmlFor="department">DEPARTMENT</label>
+                    <div className="mint-input-wrapper">
+                      <input
+                        id="department"
+                        type="text"
+                        name="department"
+                        placeholder="School of Computing"
+                        value={formData.department}
+                        onChange={handleChange}
+                        style={{ paddingLeft: "14px" }}
+                      />
+                    </div>
                   </div>
-                  <div className="signup-field">
-                    <label htmlFor="facultyId">Faculty / Employee ID (Optional)</label>
-                    <input
-                      id="facultyId"
-                      type="text"
-                      name="facultyId"
-                      placeholder="e.g. FAC-2026-09"
-                      value={formData.facultyId}
-                      onChange={handleChange}
-                    />
+                  <div className="mint-form-field">
+                    <label htmlFor="facultyId">FACULTY ID (OPTIONAL)</label>
+                    <div className="mint-input-wrapper">
+                      <input
+                        id="facultyId"
+                        type="text"
+                        name="facultyId"
+                        placeholder="FAC-2026-09"
+                        value={formData.facultyId}
+                        onChange={handleChange}
+                        style={{ paddingLeft: "14px" }}
+                      />
+                    </div>
                   </div>
                 </>
               )}
 
-              <div className="signup-field">
-                <label htmlFor="password">Password</label>
-                <input
-                  id="password"
-                  type="password"
-                  name="password"
-                  placeholder="Minimum 6 characters"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  minLength={6}
-                />
+              <div className="mint-form-field">
+                <label htmlFor="password">PASSWORD</label>
+                <div className="mint-input-wrapper">
+                  <Lock size={18} className="mint-input-icon" />
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    minLength={6}
+                  />
+                  <button
+                    type="button"
+                    className="mint-pw-toggle-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
 
-              <button type="submit" className="signup-submit-btn" disabled={loading}>
-                {loading
-                  ? "Submitting..."
-                  : formData.role === "teacher"
-                  ? "Submit Registration Request"
-                  : "Create Account"}{" "}
-                <ArrowRight size={16} />
+              <button type="submit" className="mint-primary-btn" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Loader2 size={18} className="spin-icon" /> Submitting...
+                  </>
+                ) : (
+                  <>
+                    {formData.role === "teacher" ? "Submit Registration Request" : "Create account"}{" "}
+                    <ArrowRight size={17} />
+                  </>
+                )}
               </button>
 
-              <p className="signup-switch">
-                Already have an account? <Link to="/login">Sign in</Link>
-              </p>
+              <div className="mint-switch-text">
+                Already have an account?{" "}
+                <Link to="/login" className="mint-link-btn">
+                  Sign in
+                </Link>
+              </div>
             </form>
           )}
         </div>
+
+        <p className="mint-terms-text">
+          By continuing, you agree to our <a href="#terms">Terms</a> & <a href="#privacy">Privacy Policy</a>
+        </p>
       </div>
     </div>
   );

@@ -6,8 +6,26 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Synchronously initialize user from localStorage for instant 0ms render on refresh
+  const [user, setUser] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem("eduverse_user");
+      const storedToken = localStorage.getItem("eduverse_token");
+      if (storedUser && storedToken) {
+        return JSON.parse(storedUser);
+      }
+    } catch (e) {
+      console.error("Failed to parse stored user:", e);
+    }
+    return null;
+  });
+
+  // If token and user exist in storage, do not block with loading screen
+  const [loading, setLoading] = useState(() => {
+    const storedToken = localStorage.getItem("eduverse_token");
+    const storedUser = localStorage.getItem("eduverse_user");
+    return !storedToken || !storedUser;
+  });
 
   const logout = () => {
     localStorage.removeItem("eduverse_token");
@@ -36,7 +54,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        // Verify token with server on application startup
+        // Silently verify and refresh session in background without blocking the UI
         const res = await api.get("/auth/me");
         if (res.data && res.data.user) {
           const normalizedUser = {
@@ -49,8 +67,11 @@ export const AuthProvider = ({ children }) => {
           logout();
         }
       } catch (err) {
-        console.error("Auth session validation failed:", err);
-        logout();
+        // Only log out on actual unauthorized 401/403 responses
+        if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+          console.error("Session expired or invalid:", err);
+          logout();
+        }
       } finally {
         setLoading(false);
       }
@@ -65,3 +86,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+

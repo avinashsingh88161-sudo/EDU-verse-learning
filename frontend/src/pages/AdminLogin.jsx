@@ -1,21 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../api/axiosInstance";
+import api, { warmupBackend } from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
-import { ShieldCheck, ArrowRight } from "lucide-react";
-import "./Login.css";
+import { ShieldCheck, ArrowRight, Loader2, Sparkles, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import "./LandingPage.css";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const [formData, setFormData] = useState({
-    email: "admin@eduverse.com",
+    email: "",
     password: "",
   });
-
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSlowAuth, setIsSlowAuth] = useState(false);
+
+  useEffect(() => {
+    warmupBackend();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -24,10 +29,23 @@ const AdminLogin = () => {
     });
   };
 
+  const fillAdminDemo = () => {
+    setFormData({
+      email: "admin@eduverse.com",
+      password: "Admin@123",
+    });
+    setError("");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+    setIsSlowAuth(false);
+
+    const timer = setTimeout(() => {
+      setIsSlowAuth(true);
+    }, 2500);
 
     try {
       const res = await api.post("/auth/login", formData);
@@ -44,79 +62,111 @@ const AdminLogin = () => {
     } catch (err) {
       setError(err.response?.data?.message || "Invalid Admin email or password.");
     } finally {
+      clearTimeout(timer);
+      setIsSlowAuth(false);
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-brand">
-        <div className="brand-top">
-          <div className="brand-logo">
-            <ShieldCheck size={24} />
+    <div className="mint-auth-page-root">
+      <div className="mint-bg-orb orb-emerald-1"></div>
+      <div className="mint-bg-orb orb-emerald-2"></div>
+
+      <div className="mint-auth-card-wrapper animate-fade-in">
+        <div className="mint-auth-card">
+          <div className="mint-card-logo-badge" style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)" }}>
+            <ShieldCheck size={28} className="mint-brand-icon" />
           </div>
-          <span className="brand-name">EduVerse HOD</span>
-        </div>
 
-        <div className="brand-content">
-          <span className="brand-eyebrow">Campus Administration</span>
-          <h1>
-            Head of Department
-            <br />
-            <span>Control Panel.</span>
-          </h1>
-          <p className="brand-description">
-            Centralized portal for managing campus faculty, monitoring student academic progress, auditing course content, and governing evaluations.
-          </p>
-        </div>
+          <div className="mint-card-header">
+            <h1>Admin / HOD Portal</h1>
+            <p>Enter institutional governance credentials</p>
+          </div>
 
-        <div className="brand-footer">EduVerse HOD Governance System</div>
-      </div>
+          {error && <div className="mint-error-banner">{error}</div>}
 
-      <div className="login-panel">
-        <div className="login-card glass-card">
-          <form className="login-form" onSubmit={handleSubmit}>
-            <span className="login-eyebrow">HOD / Admin Portal</span>
-            <h2>Sign in as Admin</h2>
-            <p className="login-subtitle">Enter HOD administrative credentials to continue.</p>
-
-            {error && <div className="login-error-banner">{error}</div>}
-
-            <div className="login-field">
-              <label htmlFor="email">Administrative Email</label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                placeholder="admin@eduverse.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
+          <form className="mint-auth-form" onSubmit={handleSubmit} autoComplete="off">
+            <div className="mint-form-field">
+              <label htmlFor="admin-email">ADMIN EMAIL</label>
+              <div className="mint-input-wrapper">
+                <Mail size={18} className="mint-input-icon" />
+                <input
+                  id="admin-email"
+                  type="email"
+                  name="email"
+                  placeholder="admin@eduverse.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  onFocus={warmupBackend}
+                  autoComplete="off"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="login-field">
-              <label htmlFor="password">Password</label>
-              <input
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter admin password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
+            <div className="mint-form-field">
+              <label htmlFor="admin-password">PASSWORD</label>
+              <div className="mint-input-wrapper">
+                <Lock size={18} className="mint-input-icon" />
+                <input
+                  id="admin-password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  onFocus={warmupBackend}
+                  autoComplete="new-password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="mint-pw-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
 
-            <button type="submit" className="login-submit-btn" disabled={loading}>
-              {loading ? "Authenticating..." : "Access Admin Panel"} <ArrowRight size={16} />
+            <button type="submit" className="mint-primary-btn" disabled={loading} style={{ background: "#0284c7" }}>
+              {loading ? (
+                <>
+                  <Loader2 size={18} className="spin-icon" /> Authenticating...
+                </>
+              ) : (
+                <>
+                  Access Admin Panel <ArrowRight size={17} />
+                </>
+              )}
             </button>
 
-            <p className="login-switch">
-              Standard User? <Link to="/login">Go to Standard Login</Link>
-            </p>
+            {isSlowAuth && (
+              <div className="mint-coldstart-notice">
+                <Sparkles size={15} className="spin-icon" />
+                <span>Waking up cloud database... Logging in now.</span>
+              </div>
+            )}
+
+            <div className="mint-switch-text">
+              Standard User?{" "}
+              <Link to="/login" className="mint-link-btn">
+                Standard Login
+              </Link>
+            </div>
+
+            <div className="mint-quick-demo-pills">
+              <button type="button" className="mint-demo-pill admin" onClick={fillAdminDemo}>
+                Auto-fill Admin Demo
+              </button>
+            </div>
           </form>
         </div>
+
+        <p className="mint-terms-text">
+          EduVerse Campus Institutional Administration System
+        </p>
       </div>
     </div>
   );

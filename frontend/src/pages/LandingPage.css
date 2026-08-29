@@ -1,0 +1,442 @@
+/* ==========================================================================
+   Clean Mint / Emerald & White Minimalist Authentication Theme
+   ========================================================================== */
+
+.mint-auth-page-root {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-sans, "Plus Jakarta Sans", system-ui, sans-serif);
+}
+
+/* Subtle background soft glows */
+.mint-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(100px);
+  opacity: 0.45;
+}
+
+.orb-emerald-1 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+  top: -100px;
+  right: 15%;
+}
+
+.orb-emerald-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%);
+  bottom: -80px;
+  left: 10%;
+}
+
+/* Centered Card Wrapper */
+.mint-auth-card-wrapper {
+  width: 100%;
+  max-width: 440px;
+  z-index: 10;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Pure White Card */
+.mint-auth-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #eef2f6;
+  border-radius: 24px;
+  padding: 40px 36px;
+  box-shadow: 
+    0 10px 30px -5px rgba(0, 0, 0, 0.05),
+    0 20px 40px -15px rgba(0, 184, 124, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Top Squircle Emerald Logo Badge */
+.mint-card-logo-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #00b87c 0%, #059669 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px -4px rgba(0, 184, 124, 0.4);
+  margin-bottom: 20px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mint-card-logo-badge:hover {
+  transform: scale(1.06) rotate(-2deg);
+}
+
+.mint-brand-icon {
+  stroke-width: 2.2px;
+}
+
+/* Header Text */
+.mint-card-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.mint-card-header h1 {
+  font-family: var(--font-display, "Outfit", sans-serif);
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.mint-card-header p {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+/* Error Banner */
+.mint-error-banner {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #ef4444;
+  font-size: 0.84rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+
+/* Form Layout */
+.mint-auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mint-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mint-form-field label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Clean Input Wrapper */
+.mint-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.mint-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #9ca3af;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.mint-input-wrapper input {
+  width: 100%;
+  height: 48px;
+  padding: 0 40px 0 44px;
+  border-radius: 12px;
+  border: 1.5px solid #e5e7eb;
+  background: #ffffff;
+  color: #111827;
+  font-size: 0.92rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mint-input-wrapper input::placeholder {
+  color: #9ca3af;
+}
+
+.mint-input-wrapper input:focus {
+  border-color: #00b87c;
+  box-shadow: 0 0 0 3px rgba(0, 184, 124, 0.15);
+}
+
+.mint-input-wrapper:focus-within .mint-input-icon {
+  color: #00b87c;
+}
+
+/* Password Toggle */
+.mint-pw-toggle-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.mint-pw-toggle-btn:hover {
+  color: #4b5563;
+}
+
+/* Primary Green Button */
+.mint-primary-btn {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  border: none;
+  background: #00b87c;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 184, 124, 0.35);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-top: 4px;
+}
+
+.mint-primary-btn:hover:not(:disabled) {
+  background: #009e6a;
+  box-shadow: 0 6px 20px rgba(0, 184, 124, 0.45);
+  transform: translateY(-1px);
+}
+
+.mint-primary-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.mint-primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Coldstart Notice */
+.mint-coldstart-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(0, 184, 124, 0.08);
+  border: 1px solid rgba(0, 184, 124, 0.2);
+  color: #059669;
+  font-size: 0.8rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Switch Text */
+.mint-switch-text {
+  text-align: center;
+  font-size: 0.88rem;
+  color: #4b5563;
+  margin-top: 4px;
+}
+
+.mint-link-btn {
+  background: none;
+  border: none;
+  color: #00b87c;
+  font-weight: 700;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.mint-link-btn:hover {
+  color: #009e6a;
+  text-decoration: underline;
+}
+
+/* Quick Demo Pills Row */
+.mint-quick-demo-pills {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.demo-hint-label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.mint-demo-pill {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mint-demo-pill:hover {
+  background: #f0fdf4;
+  border-color: #00b87c;
+  color: #00b87c;
+}
+
+.mint-demo-pill.admin:hover {
+  background: #fefce8;
+  border-color: #f59e0b;
+  color: #d97706;
+}
+
+/* Role Pills in Signup */
+.mint-role-pills-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.mint-role-btn {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  border: 1.5px solid #e5e7eb;
+  background: #ffffff;
+  color: #4b5563;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mint-role-btn:hover {
+  border-color: #00b87c;
+  color: #00b87c;
+}
+
+.mint-role-btn.active {
+  background: #f0fdf4;
+  border-color: #00b87c;
+  color: #00b87c;
+  box-shadow: 0 2px 8px rgba(0, 184, 124, 0.15);
+}
+
+.mint-teacher-alert {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  color: #a16207;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+/* Bottom Terms Text */
+.mint-terms-text {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.mint-terms-text a {
+  color: #6b7280;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.mint-terms-text a:hover {
+  color: #00b87c;
+}
+
+/* Success Pending View */
+.mint-pending-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.mint-pending-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fefce8;
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.mint-pending-success h2 {
+  font-family: var(--font-display, "Outfit", sans-serif);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.pending-msg {
+  font-size: 0.88rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.pending-notice-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  font-size: 0.8rem;
+  text-align: left;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}

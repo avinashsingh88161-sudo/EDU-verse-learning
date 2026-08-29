@@ -127,11 +127,11 @@
   max-width: 460px;
   padding: 36px;
   border-radius: var(--radius-lg);
-  background: #181b2a;
+  background: var(--bg-subtle);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-light);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
 }
 
 .signup-form {
@@ -195,8 +195,8 @@
   gap: 8px;
   padding: 0 14px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
-  background: #141726;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: #f8fafc;
   color: var(--text-secondary);
   font-weight: 600;
   font-size: 0.88rem;
@@ -207,7 +207,16 @@
 .role-btn:hover {
   border-color: var(--brand-primary);
   color: var(--text-main);
-  background: #181b2e;
+  background: #ffffff;
+}
+
+[data-theme="dark"] .role-btn {
+  background: #0b0f19;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .role-btn:hover {
+  background: #111827;
 }
 
 .role-btn.active {
@@ -234,9 +243,9 @@
   height: 44px;
   padding: 0 14px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
-  background: #141726;
-  color: var(--text-main);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: #f8fafc;
+  color: #0f172a;
   font-family: inherit;
   font-size: 0.92rem;
   outline: none;
@@ -246,7 +255,7 @@
 .signup-field input:focus {
   border-color: var(--brand-primary);
   box-shadow: 0 0 0 3px var(--brand-primary-light);
-  background: #181b2e;
+  background: #ffffff;
 }
 
 /* Prevent browser autofill white/yellow background override */
@@ -254,10 +263,30 @@
 .signup-field input:-webkit-autofill:hover,
 .signup-field input:-webkit-autofill:focus,
 .signup-field input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px #141726 inset !important;
-  -webkit-text-fill-color: var(--text-main) !important;
-  caret-color: var(--text-main);
+  -webkit-box-shadow: 0 0 0 30px #f8fafc inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  caret-color: #0f172a;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Dark Mode Overrides for Inputs & Autofill */
+[data-theme="dark"] .signup-field input {
+  background: #0b0f19;
+  border-color: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .signup-field input:focus {
+  background: #111827;
+}
+
+[data-theme="dark"] .signup-field input:-webkit-autofill,
+[data-theme="dark"] .signup-field input:-webkit-autofill:hover,
+[data-theme="dark"] .signup-field input:-webkit-autofill:focus,
+[data-theme="dark"] .signup-field input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #0b0f19 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  caret-color: #f8fafc;
 }
 
 /* Primary Button */

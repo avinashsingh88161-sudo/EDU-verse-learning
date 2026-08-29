@@ -5,8 +5,6 @@ import api from "../api/axiosInstance";
 import {
   Search,
   Bell,
-  Sun,
-  Moon,
   ChevronDown,
   LogOut,
   CheckCircle,
@@ -22,7 +20,6 @@ import {
 const Topbar = ({ pageTitle = "Dashboard", role = "student", onSearch }) => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [theme, setTheme] = useState(localStorage.getItem("eduverse_theme") || "dark");
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -39,10 +36,11 @@ const Topbar = ({ pageTitle = "Dashboard", role = "student", onSearch }) => {
   const notifRef = useRef(null);
   const searchRef = useRef(null);
 
+  // Clear any legacy dark theme preference from storage
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("eduverse_theme", theme);
-  }, [theme]);
+    localStorage.removeItem("eduverse_theme");
+    document.documentElement.removeAttribute("data-theme");
+  }, []);
 
   // Fetch notifications on mount & user change
   useEffect(() => {
@@ -144,10 +142,6 @@ const Topbar = ({ pageTitle = "Dashboard", role = "student", onSearch }) => {
     }
   };
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
   const handleLogout = () => {
     logout();
     navigate("/login", { replace: true });
@@ -158,6 +152,7 @@ const Topbar = ({ pageTitle = "Dashboard", role = "student", onSearch }) => {
     setSearchQuery(q);
     if (onSearch) onSearch(q);
   };
+
 
   const getResultIcon = (type) => {
     switch (type) {
@@ -286,15 +281,6 @@ const Topbar = ({ pageTitle = "Dashboard", role = "student", onSearch }) => {
 
       {/* Right Controls */}
       <div className="topbar-right">
-        {/* Theme Toggle */}
-        <button
-          className="topbar-action-btn"
-          onClick={toggleTheme}
-          title={`Switch to ${theme === "dark" ? "Light" : "Dark"} Mode`}
-        >
-          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
-
         {/* Notifications */}
         <div className="notification-dropdown-wrap" ref={notifRef}>
           <button

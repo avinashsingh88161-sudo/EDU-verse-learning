@@ -170,6 +170,7 @@ const TeacherDashboard = () => {
               subtitle="Created modules"
               icon={BookOpen}
               colorTheme="indigo"
+              onClick={() => navigate("/teacher/courses")}
             />
             <StatCard
               title="Total Enrolled Students"
@@ -177,6 +178,7 @@ const TeacherDashboard = () => {
               subtitle="Unique enrolled learners"
               icon={Users}
               colorTheme="cyan"
+              onClick={() => navigate("/teacher/students")}
             />
             <StatCard
               title="Published Quizzes"
@@ -184,6 +186,7 @@ const TeacherDashboard = () => {
               subtitle="Active question banks"
               icon={HelpCircle}
               colorTheme="amber"
+              onClick={() => navigate("/teacher/quizzes")}
             />
             <StatCard
               title="Pending Reviews"
@@ -191,6 +194,7 @@ const TeacherDashboard = () => {
               subtitle="Deliverables awaiting evaluation"
               icon={Award}
               colorTheme="rose"
+              onClick={() => navigate("/teacher/submissions")}
             />
           </div>
 
