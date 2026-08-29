@@ -80,25 +80,6 @@ const LandingPage = () => {
     setSuccessPending("");
   };
 
-  // Quick 1-click Demo Fill
-  const fillDemo = (role) => {
-    setActiveTab("login");
-    setLoginError("");
-    if (role === "teacher") {
-      setLoginData({
-        email: "avinashsingh88161@gmail.com",
-        password: "Avinash@123",
-      });
-    } else if (role === "student") {
-      setLoginData({
-        email: "ashutosh123@gmail.com",
-        password: "Avinash@123",
-      });
-    } else if (role === "admin") {
-      navigate("/admin/login");
-    }
-  };
-
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginError("");
@@ -281,20 +262,6 @@ const LandingPage = () => {
                   }}
                 >
                   Sign up
-                </button>
-              </div>
-
-              {/* Quick 1-Click Demo Pills */}
-              <div className="mint-quick-demo-pills">
-                <span className="demo-hint-label">Quick Demo:</span>
-                <button type="button" className="mint-demo-pill" onClick={() => fillDemo("student")}>
-                  Student
-                </button>
-                <button type="button" className="mint-demo-pill" onClick={() => fillDemo("teacher")}>
-                  Teacher
-                </button>
-                <button type="button" className="mint-demo-pill admin" onClick={() => fillDemo("admin")}>
-                  Admin
                 </button>
               </div>
             </form>

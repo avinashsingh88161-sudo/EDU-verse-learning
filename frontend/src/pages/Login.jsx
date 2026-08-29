@@ -29,23 +29,6 @@ const Login = () => {
     });
   };
 
-  const fillDemo = (role) => {
-    setError("");
-    if (role === "teacher") {
-      setFormData({
-        email: "avinashsingh88161@gmail.com",
-        password: "Avinash@123",
-      });
-    } else if (role === "student") {
-      setFormData({
-        email: "ashutosh123@gmail.com",
-        password: "Avinash@123",
-      });
-    } else if (role === "admin") {
-      navigate("/admin/login");
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -167,19 +150,6 @@ const Login = () => {
               <Link to="/signup" className="mint-link-btn">
                 Sign up
               </Link>
-            </div>
-
-            <div className="mint-quick-demo-pills">
-              <span className="demo-hint-label">Quick Demo:</span>
-              <button type="button" className="mint-demo-pill" onClick={() => fillDemo("student")}>
-                Student
-              </button>
-              <button type="button" className="mint-demo-pill" onClick={() => fillDemo("teacher")}>
-                Teacher
-              </button>
-              <button type="button" className="mint-demo-pill admin" onClick={() => fillDemo("admin")}>
-                Admin
-              </button>
             </div>
           </form>
         </div>

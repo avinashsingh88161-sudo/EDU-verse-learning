@@ -29,14 +29,6 @@ const AdminLogin = () => {
     });
   };
 
-  const fillAdminDemo = () => {
-    setFormData({
-      email: "admin@eduverse.com",
-      password: "Admin@123",
-    });
-    setError("");
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -154,12 +146,6 @@ const AdminLogin = () => {
               <Link to="/login" className="mint-link-btn">
                 Standard Login
               </Link>
-            </div>
-
-            <div className="mint-quick-demo-pills">
-              <button type="button" className="mint-demo-pill admin" onClick={fillAdminDemo}>
-                Auto-fill Admin Demo
-              </button>
             </div>
           </form>
         </div>
