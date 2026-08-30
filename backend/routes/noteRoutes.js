@@ -32,15 +32,26 @@ router.get(
   getCourseNotes
 );
 
-// Teacher Upload Route (Accepts both field names 'file' and 'pdfFile')
+// Teacher Upload Route (Accepts both field names 'file' and 'pdfFile' with graceful error handling)
 router.post(
   "/",
   protect,
   teacherOnly,
-  uploadNoteMiddleware.fields([
-    { name: "file", maxCount: 1 },
-    { name: "pdfFile", maxCount: 1 },
-  ]),
+  (req, res, next) => {
+    uploadNoteMiddleware.fields([
+      { name: "file", maxCount: 1 },
+      { name: "pdfFile", maxCount: 1 },
+    ])(req, res, (err) => {
+      if (err) {
+        console.error("Multer / File upload error:", err);
+        return res.status(400).json({
+          success: false,
+          message: err.message || "File upload failed. Please ensure the document is a valid PDF.",
+        });
+      }
+      next();
+    });
+  },
   uploadNote
 );
 

@@ -12,15 +12,26 @@ const { uploadSubmissionMiddleware } = require("../config/cloudinary");
 
 const router = express.Router();
 
-// Student Submit Assignment (Accepts 'file' or 'submissionFile')
+// Student Submit Assignment (Accepts 'file' or 'submissionFile' with error handling)
 router.post(
   "/:assignmentId",
   protect,
   authorizeRoles("student"),
-  uploadSubmissionMiddleware.fields([
-    { name: "file", maxCount: 1 },
-    { name: "submissionFile", maxCount: 1 },
-  ]),
+  (req, res, next) => {
+    uploadSubmissionMiddleware.fields([
+      { name: "file", maxCount: 1 },
+      { name: "submissionFile", maxCount: 1 },
+    ])(req, res, (err) => {
+      if (err) {
+        console.error("Multer / Submission upload error:", err);
+        return res.status(400).json({
+          success: false,
+          message: err.message || "File upload failed. Allowed formats: PDF, JPG, JPEG, PNG (max 15MB).",
+        });
+      }
+      next();
+    });
+  },
   submitAssignment
 );
 

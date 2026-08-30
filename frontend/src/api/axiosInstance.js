@@ -5,9 +5,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api"
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 60000, // 60s timeout to gracefully support cloud cold-starts
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 api.interceptors.request.use((config) => {
@@ -15,6 +12,11 @@ api.interceptors.request.use((config) => {
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  // When data is FormData, let browser/axios set multipart/form-data boundary automatically
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
   }
 
   return config;
@@ -58,4 +60,3 @@ export const warmupBackend = () => {
 };
 
 export default api;
-

@@ -43,8 +43,12 @@ const uploadNote = async (req, res) => {
       });
     }
 
-    // Only the course owner can upload notes
-    if (course.teacher.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+    // Only the course owner or admin can upload notes
+    const courseTeacherId = (course.teacher?._id || course.teacher || "").toString();
+    const currentUserId = (req.user._id || req.user.id || "").toString();
+    const userRole = (req.user.role || "").toLowerCase();
+
+    if (courseTeacherId && currentUserId && courseTeacherId !== currentUserId && userRole !== "admin") {
       return res.status(403).json({
         success: false,
         message: "You can upload notes only for your own course.",
