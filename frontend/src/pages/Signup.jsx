@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
-import { Brain, ArrowRight, UserCheck, BookOpen, Clock, CheckCircle2, Mail, Lock, User, Eye, EyeOff, Loader2 } from "lucide-react";
+import { GraduationCap, ArrowRight, UserCheck, BookOpen, Clock, CheckCircle2, Mail, Lock, User, Eye, EyeOff, Loader2 } from "lucide-react";
 import "./LandingPage.css";
 
 const Signup = () => {
@@ -80,7 +80,7 @@ const Signup = () => {
       <div className="mint-auth-card-wrapper animate-fade-in">
         <div className="mint-auth-card">
           <div className="mint-card-logo-badge">
-            <Brain size={28} className="mint-brand-icon" />
+            <GraduationCap size={30} className="mint-brand-icon" />
           </div>
 
           <div className="mint-card-header">

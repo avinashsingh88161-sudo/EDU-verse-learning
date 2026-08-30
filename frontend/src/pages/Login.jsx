@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api, { warmupBackend } from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
-import { Brain, ArrowRight, Loader2, Sparkles, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { GraduationCap, ArrowRight, Loader2, Sparkles, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import "./LandingPage.css";
 
 const Login = () => {
@@ -72,7 +72,7 @@ const Login = () => {
       <div className="mint-auth-card-wrapper animate-fade-in">
         <div className="mint-auth-card">
           <div className="mint-card-logo-badge">
-            <Brain size={28} className="mint-brand-icon" />
+            <GraduationCap size={30} className="mint-brand-icon" />
           </div>
 
           <div className="mint-card-header">

@@ -160,7 +160,7 @@ const LandingPage = () => {
         <div className="mint-auth-card">
           {/* Top Emerald Squircle Logo Badge */}
           <div className="mint-card-logo-badge">
-            <Brain size={28} className="mint-brand-icon" />
+            <GraduationCap size={30} className="mint-brand-icon" />
           </div>
 
           {/* Heading */}
