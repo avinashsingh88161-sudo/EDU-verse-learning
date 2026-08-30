@@ -237,7 +237,7 @@ const TeacherNotes = () => {
                   <h3 className="note-title">{note.title}</h3>
                   <p className="note-desc">{note.description || "PDF Document"}</p>
 
-                  <div className="note-card-footer flex-gap-8">
+                  <div className="note-card-footer" style={{ display: "flex", gap: "14px", alignItems: "center", width: "100%" }}>
                     <button
                       className="primary-action-btn flex-1"
                       onClick={() => openNoteFile(note)}
