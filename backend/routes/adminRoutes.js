@@ -13,6 +13,8 @@ const {
   getTeacherRequests,
   approveTeacherRequest,
   rejectTeacherRequest,
+  deleteUser,
+  deleteTeacherRequest,
 } = require("../controllers/adminController");
 
 const router = express.Router();
@@ -30,10 +32,12 @@ router.get("/assignments", getAdminAssignments);
 router.get("/results", getAdminResults);
 router.get("/activity", getAdminActivity);
 router.put("/users/:userId/toggle-status", toggleUserStatus);
+router.delete("/users/:userId", deleteUser);
 
 // Teacher Registration Requests Management Routes
 router.get("/teacher-requests", getTeacherRequests);
 router.put("/teacher-requests/:requestId/approve", approveTeacherRequest);
 router.put("/teacher-requests/:requestId/reject", rejectTeacherRequest);
+router.delete("/teacher-requests/:requestId", deleteTeacherRequest);
 
 module.exports = router;

@@ -6,7 +6,7 @@ import Topbar from "../components/Topbar";
 import LoadingSpinner from "../components/LoadingSpinner";
 import EmptyState from "../components/EmptyState";
 import Modal from "../components/Modal";
-import { Users, Power, Search, CheckCircle, XCircle, Eye, UserPlus, Clock, UserCheck, Check, CheckCircle2 } from "lucide-react";
+import { Users, Power, Search, CheckCircle, XCircle, Eye, UserPlus, Clock, UserCheck, Check, CheckCircle2, Trash2 } from "lucide-react";
 import "./Dashboard.css";
 
 const AdminTeachers = () => {
@@ -26,6 +26,10 @@ const AdminTeachers = () => {
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
+
+  // Delete Modal States
+  const [selectedDeleteTarget, setSelectedDeleteTarget] = useState(null); // { item, type: "request" | "user" }
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -112,6 +116,36 @@ const AdminTeachers = () => {
     } catch (err) {
       console.error("Approve error:", err);
       setError(err.response?.data?.message || "Failed to approve teacher request.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const openDeleteModal = (targetItem, type) => {
+    setSelectedDeleteTarget({ item: targetItem, type });
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirmed = async () => {
+    if (!selectedDeleteTarget) return;
+    setActionLoading(true);
+    setError("");
+    setSuccessMsg("");
+
+    try {
+      if (selectedDeleteTarget.type === "request") {
+        const res = await api.delete(`/admin/teacher-requests/${selectedDeleteTarget.item._id}`);
+        setSuccessMsg(res.data.message || "Teacher registration request removed successfully.");
+      } else {
+        const res = await api.delete(`/admin/users/${selectedDeleteTarget.item._id}`);
+        setSuccessMsg(res.data.message || "Faculty account removed successfully.");
+      }
+      setIsDeleteModalOpen(false);
+      setSelectedDeleteTarget(null);
+      await fetchData();
+    } catch (err) {
+      console.error("Delete error:", err);
+      setError(err.response?.data?.message || "Failed to remove teacher record.");
     } finally {
       setActionLoading(false);
     }
@@ -296,6 +330,13 @@ const AdminTeachers = () => {
                                 </button>
                               </>
                             )}
+                            <button
+                              className="action-btn danger-btn sm"
+                              title="Remove Request"
+                              onClick={() => openDeleteModal(reqItem, "request")}
+                            >
+                              <Trash2 size={14} /> Remove
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -358,14 +399,23 @@ const AdminTeachers = () => {
                           </span>
                         </td>
                         <td>
-                          <button
-                            className={`secondary-action-btn sm ${
-                              teacher.isActive ? "text-rose" : "text-emerald"
-                            }`}
-                            onClick={() => handleToggleStatus(teacher._id)}
-                          >
-                            <Power size={13} /> {teacher.isActive ? "Deactivate" : "Activate"}
-                          </button>
+                          <div className="flex-center gap-8">
+                            <button
+                              className={`secondary-action-btn sm ${
+                                teacher.isActive ? "text-rose" : "text-emerald"
+                              }`}
+                              onClick={() => handleToggleStatus(teacher._id)}
+                            >
+                              <Power size={13} /> {teacher.isActive ? "Deactivate" : "Activate"}
+                            </button>
+                            <button
+                              className="action-btn danger-btn sm"
+                              title="Remove Faculty Account"
+                              onClick={() => openDeleteModal(teacher, "user")}
+                            >
+                              <Trash2 size={13} /> Remove
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -551,6 +601,57 @@ const AdminTeachers = () => {
                 disabled={actionLoading}
               >
                 {actionLoading ? "Rejecting..." : "Confirm Rejection"}
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Delete / Remove Confirmation Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title={selectedDeleteTarget?.type === "request" ? "Remove Teacher Request" : "Remove Faculty Account"}
+        customClassName="approve-teacher-modal"
+        headerIcon={<Trash2 className="text-rose" size={24} />}
+      >
+        {selectedDeleteTarget && (
+          <div className="approve-modal-container">
+            <p className="approve-question-text text-rose font-700">
+              Are you sure you want to permanently remove this {selectedDeleteTarget.type === "request" ? "registration request" : "teacher account"}?
+            </p>
+
+            <div className="teacher-info-box">
+              <div className="teacher-info-avatar text-rose" style={{ background: "rgba(244, 63, 94, 0.12)" }}>
+                <Trash2 size={22} />
+              </div>
+              <div className="teacher-info-content">
+                <strong className="teacher-info-name">{selectedDeleteTarget.item.name}</strong>
+                <span className="teacher-info-email">{selectedDeleteTarget.item.email}</span>
+              </div>
+            </div>
+
+            <div className="approval-status-notice border-rose text-rose">
+              <span>This action will permanently delete the record from EduVerse. This action cannot be undone.</span>
+            </div>
+
+            <div className="approve-modal-footer">
+              <button
+                type="button"
+                className="btn-modal-cancel"
+                onClick={() => setIsDeleteModalOpen(false)}
+                disabled={actionLoading}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="action-btn danger-btn"
+                onClick={handleDeleteConfirmed}
+                disabled={actionLoading}
+              >
+                <Trash2 size={16} />
+                {actionLoading ? "Removing..." : "Confirm Remove"}
               </button>
             </div>
           </div>
