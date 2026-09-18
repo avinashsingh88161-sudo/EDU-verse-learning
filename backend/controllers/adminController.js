@@ -598,6 +598,65 @@ const rejectTeacherRequest = async (req, res) => {
   }
 };
 
+// @route   DELETE /api/admin/users/:userId
+// @access  Admin
+const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User account not found.",
+      });
+    }
+
+    await User.findByIdAndDelete(userId);
+    await TeacherRegistrationRequest.deleteMany({ email: user.email });
+
+    res.status(200).json({
+      success: true,
+      message: `User account ${user.name} (${user.email}) permanently removed.`,
+    });
+  } catch (error) {
+    console.error("Delete user error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete user account.",
+      error: error.message,
+    });
+  }
+};
+
+// @route   DELETE /api/admin/teacher-requests/:requestId
+// @access  Admin
+const deleteTeacherRequest = async (req, res) => {
+  try {
+    const { requestId } = req.params;
+    const request = await TeacherRegistrationRequest.findByIdAndDelete(requestId);
+
+    if (!request) {
+      return res.status(404).json({
+        success: false,
+        message: "Teacher registration request not found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Teacher registration record for ${request.name} removed.`,
+    });
+  } catch (error) {
+    console.error("Delete teacher request error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete teacher registration request.",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getAdminDashboard,
   getAdminTeachers,
@@ -611,5 +670,7 @@ module.exports = {
   getTeacherRequests,
   approveTeacherRequest,
   rejectTeacherRequest,
+  deleteUser,
+  deleteTeacherRequest,
 };
 
