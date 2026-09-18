@@ -147,7 +147,8 @@ const getAdminStudents = async (req, res) => {
 
     const studentsWithMetrics = await Promise.all(
       students.map(async (student) => {
-        const [quizAttemptsCount, submissionsCount] = await Promise.all([
+        const [enrolledCourses, quizAttemptsCount, submissionsCount] = await Promise.all([
+          Course.find({ enrolledStudents: student._id }).select("_id title subject"),
           QuizResult.countDocuments({ student: student._id }),
           AssignmentSubmission.countDocuments({ student: student._id }),
         ]);
@@ -155,15 +156,25 @@ const getAdminStudents = async (req, res) => {
         const quizResults = await QuizResult.find({ student: student._id }).select("percentage");
         const avgQuizScore =
           quizResults.length > 0
-            ? (quizResults.reduce((sum, r) => sum + (r.percentage || 0), 0) / quizResults.length).toFixed(1)
+            ? Number(
+                (
+                  quizResults.reduce((sum, r) => sum + (r.percentage || 0), 0) /
+                  quizResults.length
+                ).toFixed(1)
+              )
             : 0;
 
         return {
           ...student.toObject(),
-          enrolledCount: student.enrolledCourses?.length || 0,
+          enrolledCount: enrolledCourses.length,
+          enrolledCourses: enrolledCourses.map((c) => ({
+            _id: c._id,
+            title: c.title,
+            subject: c.subject,
+          })),
           quizAttemptsCount,
           submissionsCount,
-          avgQuizScore: Number(avgQuizScore),
+          avgQuizScore,
         };
       })
     );
