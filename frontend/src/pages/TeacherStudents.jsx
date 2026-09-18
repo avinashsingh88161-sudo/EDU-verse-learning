@@ -164,10 +164,8 @@ const TeacherStudents = () => {
                         <strong>{student.name}</strong>
                       </td>
                       <td>{student.email}</td>
-                      <td style={{ whiteSpace: "nowrap" }}>
-                        <span className="badge badge-accent">
-                          {student.courses?.length || 0}
-                        </span>
+                      <td>
+                        <strong>{student.courses?.length || 0}</strong>
                       </td>
                       <td>{student.quizAttempts}</td>
                       <td>

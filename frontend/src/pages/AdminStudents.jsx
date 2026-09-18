@@ -112,10 +112,8 @@ const AdminStudents = () => {
                           <strong>{student.name}</strong>
                         </td>
                         <td>{student.email}</td>
-                        <td style={{ whiteSpace: "nowrap" }}>
-                          <span className="badge badge-accent">
-                            {count}
-                          </span>
+                        <td>
+                          <strong>{count}</strong>
                         </td>
                         <td>{student.quizAttemptsCount ?? 0}</td>
                         <td>
