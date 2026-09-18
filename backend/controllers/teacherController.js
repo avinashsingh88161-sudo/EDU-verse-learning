@@ -124,8 +124,9 @@ const getTeacherStudentDetails = async (req, res) => {
 
     // Check if student is enrolled in at least one course taught by this teacher
     const enrolledCourses = teacherCourses.filter((course) =>
+      course.enrolledStudents &&
       course.enrolledStudents.some(
-        (stId) => stId.toString() === studentId.toString()
+        (stId) => stId && (stId._id || stId).toString() === studentId.toString()
       )
     );
 

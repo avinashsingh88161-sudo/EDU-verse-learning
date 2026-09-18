@@ -221,7 +221,7 @@ const TeacherStudents = () => {
 
       {/* Student Details Modal */}
       {isModalOpen && (
-        <Modal title="Student Academic Record" onClose={closeModal}>
+        <Modal isOpen={isModalOpen} title="Student Academic Record" onClose={closeModal}>
           {loadingDetails ? (
             <LoadingSpinner message="Fetching detailed academic history..." />
           ) : detailsError ? (
