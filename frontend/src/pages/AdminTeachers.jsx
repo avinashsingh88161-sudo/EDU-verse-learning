@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import api from "../api/axiosInstance";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
@@ -9,6 +10,7 @@ import { Users, Power, Search, CheckCircle, XCircle, Eye, UserPlus, Clock, UserC
 import "./Dashboard.css";
 
 const AdminTeachers = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("requests"); // "requests" | "directory"
   const [teachers, setTeachers] = useState([]);
   const [requests, setRequests] = useState([]);
@@ -28,6 +30,35 @@ const AdminTeachers = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (!loading && location.state) {
+      const targetId = location.state.requestId || location.state.notif?.referenceId;
+      const notifMsg = location.state.notif?.message || "";
+
+      if (targetId && requests.length > 0) {
+        const foundReq = requests.find(
+          (r) => r._id === targetId || r._id?.toString() === targetId?.toString()
+        );
+        if (foundReq) {
+          setSelectedRequest(foundReq);
+          setIsDetailsModalOpen(true);
+          return;
+        }
+      }
+
+      if (notifMsg && requests.length > 0) {
+        const foundReqByMsg = requests.find(
+          (r) => r.email && notifMsg.toLowerCase().includes(r.email.toLowerCase())
+        );
+        if (foundReqByMsg) {
+          setSelectedRequest(foundReqByMsg);
+          setIsDetailsModalOpen(true);
+          return;
+        }
+      }
+    }
+  }, [loading, requests, location.state]);
 
   const fetchData = async () => {
     setLoading(true);

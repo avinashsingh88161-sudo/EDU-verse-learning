@@ -127,8 +127,36 @@ const Topbar = ({ pageTitle = "Dashboard", role = "student", onSearch }) => {
       console.error("Mark read error:", err);
     }
     setShowNotifications(false);
-    if (notif.targetRoute) {
-      navigate(notif.targetRoute);
+
+    let target = notif.targetRoute;
+    if (!target) {
+      const typeStr = (notif.type || "").toLowerCase();
+      const titleStr = (notif.title || "").toLowerCase();
+      const msgStr = (notif.message || "").toLowerCase();
+
+      if (
+        typeStr.includes("teacher") ||
+        titleStr.includes("teacher") ||
+        msgStr.includes("teacher")
+      ) {
+        target = "/admin/teachers";
+      } else if (typeStr.includes("assignment") || titleStr.includes("assignment")) {
+        target = "/student/assignments";
+      } else if (typeStr.includes("quiz") || titleStr.includes("quiz")) {
+        target = "/student/quizzes";
+      } else if (typeStr.includes("note") || titleStr.includes("note")) {
+        target = "/student/notes";
+      }
+    }
+
+    if (target) {
+      navigate(target, {
+        state: {
+          requestId: notif.referenceId,
+          notif,
+          timestamp: Date.now(),
+        },
+      });
     }
   };
 
