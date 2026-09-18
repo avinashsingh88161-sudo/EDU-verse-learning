@@ -114,7 +114,7 @@ const AdminStudents = () => {
                         <td>{student.email}</td>
                         <td style={{ whiteSpace: "nowrap" }}>
                           <span className="badge badge-accent">
-                            {count} {count === 1 ? "Course" : "Courses"}
+                            {count}
                           </span>
                         </td>
                         <td>{student.quizAttemptsCount ?? 0}</td>

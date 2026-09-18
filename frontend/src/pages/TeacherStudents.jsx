@@ -164,18 +164,10 @@ const TeacherStudents = () => {
                         <strong>{student.name}</strong>
                       </td>
                       <td>{student.email}</td>
-                      <td>
-                        <div className="flex-gap-xs">
-                          {student.courses && student.courses.length > 0 ? (
-                            student.courses.map((c) => (
-                              <span key={c._id} className="subject-chip">
-                                {c.title}
-                              </span>
-                            ))
-                          ) : (
-                            <span className="text-muted">No courses</span>
-                          )}
-                        </div>
+                      <td style={{ whiteSpace: "nowrap" }}>
+                        <span className="badge badge-accent">
+                          {student.courses?.length || 0}
+                        </span>
                       </td>
                       <td>{student.quizAttempts}</td>
                       <td>
