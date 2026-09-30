@@ -147,10 +147,11 @@ const login = async (req, res) => {
       });
     }
 
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = (email || "").toLowerCase().trim();
+    const emailRegex = new RegExp("^" + normalizedEmail.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i");
 
     // Check active User collection first
-    const user = await User.findOne({ email: normalizedEmail });
+    const user = await User.findOne({ email: emailRegex });
 
     if (user) {
       if (!user.isActive) {
@@ -187,7 +188,7 @@ const login = async (req, res) => {
 
     // PART 16 & 17: Check Pending or Rejected Teacher Requests
     const pendingOrRejectedRequest = await TeacherRegistrationRequest.findOne({
-      email: normalizedEmail,
+      email: emailRegex,
     }).sort({ createdAt: -1 });
 
     if (pendingOrRejectedRequest) {
