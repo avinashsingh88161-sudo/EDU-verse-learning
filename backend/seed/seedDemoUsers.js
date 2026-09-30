@@ -2,12 +2,13 @@ const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const User = require("../models/User");
+const Course = require("../models/Course");
+const Note = require("../models/Note");
+const Quiz = require("../models/Quiz");
+const Assignment = require("../models/Assignment");
 
 const seedDemoUsers = async () => {
   try {
-
-
     const hashedPasswordTeacher = await bcrypt.hash("Avinash@123", 10);
     const hashedPasswordAdmin = await bcrypt.hash(
       process.env.ADMIN_PASSWORD || "Admin@123",
@@ -23,7 +24,7 @@ const seedDemoUsers = async () => {
         isActive: true,
       },
       {
-        name: "Avinash Singh",
+        name: "Prof. Avinash Singh",
         email: "avinashsingh88161@gmail.com",
         password: hashedPasswordTeacher,
         role: "teacher",
@@ -32,7 +33,7 @@ const seedDemoUsers = async () => {
         isActive: true,
       },
       {
-        name: "Avinash Singh",
+        name: "Prof. Avinash Singh",
         email: "avinashsingh888161@gmail.com",
         password: hashedPasswordTeacher,
         role: "teacher",
@@ -64,7 +65,20 @@ const seedDemoUsers = async () => {
       }
     }
 
-    console.log("✅ Seeded demo accounts (Student, Teacher, Admin)");
+    // Sync any courses, notes, quizzes, and assignments to primary teacher account
+    const primaryTeacher = await User.findOne({ email: "avinashsingh88161@gmail.com" });
+    const altTeacher = await User.findOne({ email: "avinashsingh888161@gmail.com" });
+
+    if (primaryTeacher && altTeacher && primaryTeacher._id.toString() !== altTeacher._id.toString()) {
+      await Promise.all([
+        Course.updateMany({ teacher: altTeacher._id }, { teacher: primaryTeacher._id }),
+        Note.updateMany({ teacher: altTeacher._id }, { teacher: primaryTeacher._id }),
+        Quiz.updateMany({ teacher: altTeacher._id }, { teacher: primaryTeacher._id }),
+        Assignment.updateMany({ teacher: altTeacher._id }, { teacher: primaryTeacher._id }),
+      ]);
+    }
+
+    console.log("✅ Seeded demo accounts and synced teacher content.");
   } catch (error) {
     console.error("Demo user seeding error:", error);
   }
